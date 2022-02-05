@@ -1,30 +1,24 @@
 version: '3.8'
 
 services:
-  gateway_api:
-    container_name: Gateway-api
-    build: ./api
-    command: uvicorn app/main:app --reload --host 127.0.0.1 --port 8080
-    volumes:
-      - ./gateway_api/:/app/
-    ports:
-      - 8001:8080
 
   todo:
-    container_name: Todo-service
+    container_name: todo_service
+    image: demoindiv_backend
     build: ./todo
-    command: uvicorn app/main:app --reload --host 127.0.0.1 --port 8000
-    volumes:
-      - ./todo/:/app/
+    expose:
+      - "8080"
     ports:
-      - 8002:8000
+      - "8080:8080"
+    depends_on:
+      - todo_mongo
+    links:
+      - todo_mongo
 
-  todoMongoDB:
-    container_name: Todo-mongoDB
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${TODO_MONGO_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${TODO_MONGO_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=todo
-    env_file:
-      - ./.env
+  todoMongo:
+    container_name: todo_mongo
+    image: mongo
+    expose:
+      - "27017"
+    volumes:
+      -  ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
