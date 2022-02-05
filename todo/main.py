@@ -1,3 +1,4 @@
+from imp import reload
 import uvicorn
 from fastapi import FastAPI, Query, HTTPException
 import services.todo_service as todo_service
@@ -39,5 +40,3 @@ def delete_todo(id : str = Query(...)):
          raise HTTPException(status_code=400 ,detail = "failed")
     else:
         return delete[1]
-
-uvicorn.run(app, host='127.0.0.1',port=8080)
