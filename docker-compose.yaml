@@ -15,7 +15,7 @@ services:
     links:
       - todo_mongo
 
-  todoMongo:
+  todo_mongo:
     container_name: todo_mongo
     image: mongo
     expose:
