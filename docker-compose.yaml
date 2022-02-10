@@ -1,18 +1,24 @@
 version: '3.8'
 
 services:
-  gateway_api:
-    build: ./api
-    command: uvicorn app.main:app --reload --host 127.0.0.1 --port 8080 
-    volumes:
-      - ./gateway_api/:/app/
-    ports:
-      - 8001:8080
 
   todo:
+    container_name: todo_service
+    image: demoindiv_backend
     build: ./todo
-    command: uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-    volumes:
-      - ./todo/:/app/
+    expose:
+      - "8080"
     ports:
-      - 8002:8000
+      - "8080:8080"
+    depends_on:
+      - todo_mongo
+    links:
+      - todo_mongo
+
+  todoMongo:
+    container_name: todo_mongo
+    image: mongo
+    expose:
+      - "27017"
+    volumes:
+      -  ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

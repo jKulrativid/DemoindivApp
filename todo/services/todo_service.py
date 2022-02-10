@@ -6,13 +6,17 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field, EmailStr
 from bson import ObjectId
 from typing import Optional, List
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 import json
 from bson import json_util, ObjectId
 
 #import motor.motor_asyncio
 
-client = MongoClient('mongodb+srv://Kan:mk8cTFBpg7Vvg5W@gettingstarted.wb0qj.mongodb.net/GettingStarted?retryWrites=true&w=majority')
+client = MongoClient('mongodb://todo_mongo:27017', serverSelectionTimeoutMS=5000)
+try:
+    client.server_info()
+except errors.ServerSelectionTimeoutError as err:
+    print(err)
 db = client.gettingStarted
 toDoList = db.toDoList
 
@@ -45,8 +49,6 @@ class ToDoModel(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
-    
-
 
 class UpdateToDoModel(BaseModel):
     topic: str = Field(...)
