@@ -1,12 +1,13 @@
-from imp import reload
-import uvicorn
 from fastapi import FastAPI, Query, HTTPException
 import services.todo_service as todo_service
-from typing import Optional, List
+from typing import Optional
 import json
-from bson import json_util, ObjectId
+from bson import json_util
+
+from todo.cors import setup_cors
 
 app = FastAPI()
+setup_cors(app)
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
@@ -21,7 +22,6 @@ def create_todo(todo : todo_service.UpdateToDoModel):
 
 @app.get("/todo")
 def read_todo(uid : Optional[str] = Query(None), topic : Optional[str] = Query(None), description : Optional[str] = Query(None) ):
-    print(uid)
     return todo_service.read_todo(uid, topic,description)
 
 @app.put("/todo")
