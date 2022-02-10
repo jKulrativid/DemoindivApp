@@ -10,13 +10,8 @@ from pymongo import MongoClient, errors
 import json
 from bson import json_util, ObjectId
 
-#import motor.motor_asyncio
-
 client = MongoClient('mongodb://todo_mongo:27017', serverSelectionTimeoutMS=5000)
-try:
-    client.server_info()
-except errors.ServerSelectionTimeoutError as err:
-    print(err)
+
 db = client.gettingStarted
 toDoList = db.toDoList
 
@@ -67,8 +62,9 @@ def create_todo(todo : UpdateToDoModel):
             "id": str(new_todo.inserted_id)
         }
 
-def read_todo(topic : Optional[str],description : Optional[str]):
-    if(topic==None and description==None)  : cur =  toDoList.find()
+def read_todo(uid : Optional[str], topic : Optional[str], description : Optional[str]):
+    if(uid!=None)                         : cur =  toDoList.find({"_id" : ObjectId(uid)})
+    elif(topic==None and description==None)  : cur =  toDoList.find()
     elif(topic!=None and description==None): cur =  toDoList.find({"topic" : topic})
     elif(topic==None and description!=None): cur =  toDoList.find({"description" : description})
     elif(topic!=None and description!=None): cur =  toDoList.find({"topic" : topic,"description" : description})

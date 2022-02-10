@@ -15,15 +15,14 @@ def parse_json(data):
 async def root():
 	return {"Hello": "World"}
 
-
-
 @app.post("/todo", status_code=201)
 def create_todo(todo : todo_service.UpdateToDoModel):
     return todo_service.create_todo(todo)
 
 @app.get("/todo")
-def read_todo(topic : Optional[str] = Query(None),description : Optional[str] = Query(None) ):
-	return todo_service.read_todo(topic,description)
+def read_todo(uid : Optional[str] = Query(None), topic : Optional[str] = Query(None), description : Optional[str] = Query(None) ):
+    print(uid)
+    return todo_service.read_todo(uid, topic,description)
 
 @app.put("/todo")
 def update_todo(todo : todo_service.UpdateToDoModel,id : str = Query(...)):
