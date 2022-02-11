@@ -3,11 +3,20 @@ import services.todo_service as todo_service
 from typing import Optional
 import json
 from bson import json_util
-
-from todo.cors import setup_cors
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-setup_cors(app)
+
+origins = [
+    "http://localhost:3000"
+]
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=["*"],
+	allow_headers=["*"],
+)
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
