@@ -7,8 +7,5 @@ pip install -r requirements.txt
 
 ## start server
 ```shell
-cd src/demoIndiv/Scripts
-activate
-cd ../..
-python main.py
+docker-compose up --build -d
 ```

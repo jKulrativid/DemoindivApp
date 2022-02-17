@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+
+  todo:
+    container_name: todo_service
+    image: demoindiv_backend
+    build: ./todo
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - todo_mongo
+    links:
+      - todo_mongo
+
+  todo_mongo:
+    container_name: todo_mongo
+    image: mongo
+    expose:
+      - "27017"
+    volumes:
+      -  ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
